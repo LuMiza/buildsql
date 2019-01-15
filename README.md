@@ -12,7 +12,7 @@ Url:  https://github.com/LuMiza/buildsql
 ### 操作说明
 * 使用该工具无需配置任何数据库信息，不会建立mysql连接
 * Sql类支持单例创建对象`Sql::getInstance();`，或者直接`new Sql()`
-* 详细操作说明请查看`index.php`，或者thinkphp3.2手册
+* 详细操作说明请查看`demo.php`，或者thinkphp3.2手册
 
 ### 不支持的操作方式
 

@@ -3,10 +3,10 @@
     "description": "Construct SQL statement of operation database without configuring database information",
     "keywords": ["build sql", "sql", "php mysql sql"],
     "homepage": "https://github.com/LuMiza/buildsql",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "authors": [
         {
-            "name": "Rumble",
+            "name": "LuMiza",
             "email": "2694070434@qq.com"
         }
     ],
@@ -14,6 +14,6 @@
         "php": ">=5.5.0"
     },
     "autoload": {
-        "psr-4": {"BuildSql\\Sql": "src/BuildSql"}
+        "psr-4": {"BuildSql\\Sql\\": "src/BuildSql/"}
     }
 }

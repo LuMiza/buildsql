@@ -1,9 +1,5 @@
 <?php
 
-include_once __DIR__ . '/SqlDriver.class.php';
-include_once __DIR__ . '/SqlBuild.class.php';
-include_once __DIR__ . '/Sql.class.php';
-
 $model = Sql::getInstance();
 
 
