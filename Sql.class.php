@@ -1,7 +1,9 @@
 <?php
 /**
  *
- * 实现了ORM和ActiveRecords模式
+ * 实现了数据库操作sql构建
+ * @author Rumble
+ * @date  2019-1-14
  */
 class Sql {
     //单例模式
@@ -9,9 +11,7 @@ class Sql {
     // mysql数据库操作语句构建驱动对象
     protected $db               =   null;
     // 数据表前缀
-    protected $tablePrefix      =   null;
-    // 数据库名称
-    protected $dbName           =   '';
+    protected $tablePrefix      =   '';
     // 数据表名（不包含表前缀）
     protected $tableName        =   '';
     // 实际数据表名（包含表前缀）
@@ -22,7 +22,6 @@ class Sql {
     protected $data             =   array();
     // 查询表达式参数
     protected $options          =   array();
-    protected $_map             =   array();  // 字段映射定义
     protected $_scope           =   array();  // 命名范围定义
     // 链操作方法列表
     protected $methods          =   array('strict','order','alias','having','group','lock','distinct','auto','filter','validate','result','token','index','force');
@@ -31,29 +30,19 @@ class Sql {
      * 架构函数
      * 取得DB类的实例对象 字段检查
      * @access public
-     * @param string $tablePrefix 表前缀
      */
-    public function __construct($tablePrefix='') {
-        // 设置表前缀
-        if(is_null($tablePrefix)) {// 前缀为Null表示没有前缀
-            $this->tablePrefix = '';
-        }elseif('' != $tablePrefix) {
-            $this->tablePrefix = $tablePrefix;
-        }elseif(!isset($this->tablePrefix)){
-            $this->tablePrefix = '';
-        }
+    public function __construct() {
         $this->db = new SqlBuild();
     }
 
     /**
      * 单例模式
-     * @param string $tablePrefix 表前缀
      * @return Model|null
      */
-    public static function getInstance($tablePrefix='')
+    public static function getInstance()
     {
         if (! (self::$instance instanceof self)) {
-            self::$instance = new self($tablePrefix);
+            self::$instance = new self;
         }
         return self::$instance;
     }
@@ -236,7 +225,6 @@ class Sql {
                 }
             }
         }
-       
         // 安全过滤
         if(!empty($this->options['filter'])) {
             $data = array_map($this->options['filter'],$data);
@@ -362,9 +350,12 @@ class Sql {
         if (! $this->isSetTable()) {
             return false;
         }
+        if ($options) {
+            return false;
+        }
         if(empty($options) && empty($this->options['where'])) {
             // 如果删除条件为空 则删除当前数据对象所对应的记录
-            return $this->delete($options);
+            return $this->db->delete($this->options);
         }
         // 分析表达式
         $options =  $this->_parseOptions($options);
@@ -384,6 +375,9 @@ class Sql {
      */
     public function select($options=array()) {
         if (! $this->isSetTable()) {
+            return false;
+        }
+        if ($options) {
             return false;
         }
         // 分析表达式
@@ -407,7 +401,7 @@ class Sql {
             }
             $this->trueTableName    =   strtolower($tableName);
         }
-        return (!empty($this->dbName)?$this->dbName.'.':'').$this->trueTableName;
+        return $this->trueTableName;
     }
 
     /**
@@ -424,10 +418,11 @@ class Sql {
             // 自动获取表名
             $options['table']   =   $this->getTableName();
 //            $fields             =   $this->fields;
-        }else{
+        }
+/*        else{
             // 指定数据表 则重新获取字段列表 但不支持类型检测
 //            $fields             =   $this->getDbFields();
-        }
+        }*/
 
         // 数据表别名
         if(!empty($options['alias'])) {
@@ -498,33 +493,6 @@ class Sql {
     }
 
     /**
-     * 处理字段映射
-     * @access public
-     * @param array $data 当前数据
-     * @param integer $type 类型 0 写入 1 读取
-     * @return array
-     */
-    public function parseFieldsMap($data,$type=1) {
-        // 检查字段映射
-        if(!empty($this->_map)) {
-            foreach ($this->_map as $key=>$val){
-                if($type==1) { // 读取
-                    if(isset($data[$val])) {
-                        $data[$key] =   $data[$val];
-                        unset($data[$val]);
-                    }
-                }else{
-                    if(isset($data[$key])) {
-                        $data[$val] =   $data[$key];
-                        unset($data[$key]);
-                    }
-                }
-            }
-        }
-        return $data;
-    }
-
-    /**
      * 字段值增长
      * @access public
      * @param string $field  字段名
@@ -570,57 +538,6 @@ class Sql {
             $data[$field]   =   $value;
         }
         return $this->save($data);
-    }
-
-    /**
-     * 验证数据 支持 in between equal length regex expire ip_allow ip_deny
-     * @access public
-     * @param string $value 验证数据
-     * @param mixed $rule 验证表达式
-     * @param string $type 验证方式 默认为正则验证
-     * @return boolean
-     */
-    public function check($value,$rule,$type='regex'){
-        $type   =   strtolower(trim($type));
-        switch($type) {
-            case 'in': // 验证是否在某个指定范围之内 逗号分隔字符串或者数组
-            case 'notin':
-                $range   = is_array($rule)? $rule : explode(',',$rule);
-                return $type == 'in' ? in_array($value ,$range) : !in_array($value ,$range);
-            case 'between': // 验证是否在某个范围
-            case 'notbetween': // 验证是否不在某个范围            
-                if (is_array($rule)){
-                    $min    =    $rule[0];
-                    $max    =    $rule[1];
-                }else{
-                    list($min,$max)   =  explode(',',$rule);
-                }
-                return $type == 'between' ? $value>=$min && $value<=$max : $value<$min || $value>$max;
-            case 'equal': // 验证是否等于某个值
-            case 'notequal': // 验证是否等于某个值            
-                return $type == 'equal' ? $value == $rule : $value != $rule;
-            case 'length': // 验证长度
-                $length  =  mb_strlen($value,'utf-8'); // 当前数据长度
-                if(strpos($rule,',')) { // 长度区间
-                    list($min,$max)   =  explode(',',$rule);
-                    return $length >= $min && $length <= $max;
-                }else{// 指定长度
-                    return $length == $rule;
-                }
-            case 'expire':
-                list($start,$end)   =  explode(',',$rule);
-                if(!is_numeric($start)) $start   =  strtotime($start);
-                if(!is_numeric($end)) $end   =  strtotime($end);
-                return NOW_TIME >= $start && NOW_TIME <= $end;
-            case 'ip_allow': // IP 操作许可验证
-                return in_array(get_client_ip(),explode(',',$rule));
-            case 'ip_deny': // IP 操作禁止验证
-                return !in_array(get_client_ip(),explode(',',$rule));
-            case 'regex':
-            default:    // 默认使用正则验证 可以使用验证类中定义的验证名称
-                // 检查附加规则
-                return $this->regex($value,$rule);
-        }
     }
 
     /**

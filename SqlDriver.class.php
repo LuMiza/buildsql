@@ -3,9 +3,10 @@
 /**
  * sql构建驱动
  * Class SqlDriver
+ * @author Rumble
+ * @date  2019-1-14
  */
 abstract class SqlDriver {
-    protected $modelSql   = array();
     // 数据库表达式
     protected $exp = array('eq'=>'=','neq'=>'<>','gt'=>'>','egt'=>'>=','lt'=>'<','elt'=>'<=','notlike'=>'NOT LIKE','like'=>'LIKE','in'=>'IN','notin'=>'NOT IN','not in'=>'NOT IN','between'=>'BETWEEN','not between'=>'NOT BETWEEN','notbetween'=>'NOT BETWEEN');
     // 查询表达式

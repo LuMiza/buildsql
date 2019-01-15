@@ -1,6 +1,8 @@
 <?php
 /**
  * 操作mysql数据库sql构建驱动
+ * @author  Rumble
+ * @date  2019-1-14
  */
 class SqlBuild extends SqlDriver{
     /**
