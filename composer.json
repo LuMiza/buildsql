@@ -1,5 +1,5 @@
 {
-    "name": "phpbuildsql/buildsql",
+    "name": "LuMiza/buildsql",
     "description": "Construct SQL statement of operation database without configuring database information",
     "keywords": ["build sql", "sql", "php mysql sql"],
     "homepage": "https://github.com/LuMiza/buildsql",
@@ -14,6 +14,6 @@
         "php": ">=5.5.0"
     },
     "autoload": {
-        "psr-4": {"BuildSql\\Sql\\": "src/BuildSql/"}
+        "psr-4": {"LuMiza\\BuildSql\\": "src/BuildSql/"}
     }
 }
