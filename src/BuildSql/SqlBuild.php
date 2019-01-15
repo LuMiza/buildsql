@@ -4,6 +4,8 @@
  * @author  Rumble
  * @date  2019-1-14
  */
+namespace BuildSql;
+
 class SqlBuild extends SqlDriver{
     /**
      * 字段和表名处理

@@ -1,7 +1,7 @@
 ## Mysql的curd操作sql构建
 Author: Rumble
 
-Url:  https://github.com/LuMiza/sql_build
+Url:  https://github.com/LuMiza/buildsql
 
 
 ### 开发目的

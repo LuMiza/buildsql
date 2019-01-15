@@ -5,6 +5,8 @@
  * @author Rumble
  * @date  2019-1-14
  */
+namespace BuildSql;
+
 class Sql {
     //单例模式
     private static $instance = null;
