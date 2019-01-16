@@ -1,17 +1,17 @@
 {
     "name": "lumiza/buildsql",
     "description": "Construct SQL statement of operation database without configuring database information",
-    "type": "library",
-    "version": "1.0.0",
     "keywords": ["build sql", "sql", "php mysql sql"],
     "homepage": "https://github.com/lumiza/buildsql",
+    "type": "library",
     "license": "MIT",
     "authors": [
         {
             "name": "LuMiza",
-            "email": "2694070434@qq.com"
+            "email": "26994070434@qq.com"
         }
     ],
+    "minimum-stability": "dev",
     "require": {
         "php": ">=5.5.0"
     },
