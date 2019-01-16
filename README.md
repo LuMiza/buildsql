@@ -1,32 +1,42 @@
-## Mysql的curd操作sql构建
+## SQL statement for constructing operation database [ CURD ]
 Author: Rumble
-
 Url:  https://github.com/lumiza/buildsql
 
+### About Language
+* Chinese Readme File: CHINESE.md
 
-### 开发目的
-* 由于很多sql构建类需要建立mysql连接，但有的时候我们只想要sql语句，不想与数据库进行连接，这样有一个纯粹的sql构建工具就尤为重要了。
 
-* 当前sql构建工具基于thinkphp3.2进行二开，大部分sql操作和thinkphp3.2的操作方式一样
+### Package Install
+* `composer require lumiza/buildsql`
 
-### 操作说明
-* 使用该工具无需配置任何数据库信息，不会建立mysql连接
-* Sql类支持单例创建对象`Sql::getInstance();`，或者直接`new Sql()`
-* 详细操作说明请查看`demo.php`，或者thinkphp3.2手册
+### Development purpose
+* Because many SQL build classes need to establish MySQL connections, but sometimes we just want SQL statements, do not want to connect to the database, so it is particularly important to have a pure SQL build tool.
 
-### 不支持的操作方式
+* Current SQL building tools are based on ThinkPHP 3.2, and most SQL operations are the same as ThinkPHP 3.2 model operations.
 
-* 不支持对数据库字段验证，[ 不建立mysql连接，无法取得表结构信息，因此无法验证 ]
-* 不支持对象创建新的数据对象，即无`creat`方法，只能用数组的形式
-* 不支持连贯操作中的`cache`方法
-* 在`add`方法之前调用`field`方法不支持字段过滤
-* 在`save`方法之前调用`field`方法不支持字段过滤,但是支持数据过滤
-* 删除数据不支持`$sql->delete('1,2,5');`这种用法，即`delete`方法不能带参数
-* `select`函数不支持带参数
-* 不支持表映射到类，记录映射到对象
-* 不支持字段映射,即
-* 不支持连贯操作中的`relation`方法
+### Instructions
+* Using this tool, you do not need to configure any database information, and you will not establish MySQL connections.
+* The Sql class supports the singleton creation of objects `Sql:: getInstance ();`, or directly `new Sql ()`.
 
-### 特别鸣谢
+* For detailed instructions, see `demo.php`, or ThinkPHP 3.2 operation model instructions
 
-* 感谢thinkphp的开源
+
+### Unsupported Operations
+
+* Validation of database fields is not supported. [ Table structure information cannot be obtained without establishing MySQL connections, and therefore cannot be validated ]
+* Objects are not supported to create new data objects, that is, there is no `create` method, only in the form of arrays.
+
+* The `cache` method in coherent operations is not supported.
+
+* Calling the `field`method before the `add` method does not support field filtering.
+* Calling the `field`method before the `save` method does not support field filtering, but does support data filtering.
+* Deleting data does not support `sql-> delete ('1,2,5'); `This usage means that the `delete`method cannot take parameters
+* The `select` function does not support parameters
+* Mapping tables to classes and records to objects is not supported
+* Field mapping is not supported
+* The `relation` method in coherent operations is not supported
+
+### Special Thanks
+
+
+* Thank you for thinkphp's open source

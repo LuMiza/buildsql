@@ -1,6 +1,5 @@
 <?php
-
-$model = Sql::getInstance();
+$model = \BuildSql\Sql::getInstance();
 
 
 # 读取字段值
