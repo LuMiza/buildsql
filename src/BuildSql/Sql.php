@@ -672,6 +672,9 @@ class Sql {
             $options  = preg_replace_callback("/__([A-Z0-9_-]+)__/sU", function($match) use($prefix){ return $prefix.strtolower($match[1]);}, $union);
         }elseif(is_array($union)){
             if(isset($union[0])) {
+                if (! isset($this->options['union'])) {
+                    $this->options['union'] = [];
+                }
                 $this->options['union']  =  array_merge($this->options['union'],$union);
                 return $this;
             }else{

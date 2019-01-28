@@ -1,6 +1,40 @@
 <?php
 $model = \BuildSql\Sql::getInstance();
 
+# union
+
+$sql = $model->field('name')->table('user_0')
+    ->union(array('field'=>'name','table'=>'user_1'))
+    ->union(array('field'=>'name','table'=>'user_2'))
+    ->select();
+//exit($sql);
+
+$sql = $model->field('name')
+    ->table('user_0')
+    ->union(array('SELECT name FROM user_1','SELECT name FROM user_2'))
+    ->select();
+//exit($sql);
+
+$sql = $model->field('name')
+    ->table('user_0')
+    ->union('SELECT name FROM user_1')
+    ->union('SELECT name FROM user_2')
+    ->select();
+//exit($sql);
+
+# union all
+$sql = $model->field('name')
+    ->table('user_0')
+    ->union('SELECT name FROM user_1',true)
+    ->union('SELECT name FROM user_2',true)
+    ->select();
+//exit($sql);
+
+$sql  = $model->field('name')
+    ->table('user_0')
+    ->union(array('SELECT name FROM user_1','SELECT name FROM user_2'),true)
+    ->select();
+exit($sql);
 
 # 读取字段值
 $nickname = $model->table('table_name')->where('id=3')->getField('nickname');
